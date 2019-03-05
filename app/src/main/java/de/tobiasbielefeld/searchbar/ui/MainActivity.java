@@ -150,10 +150,10 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
      *
      */
     public void startSearch() {
-        String baseUrl = getSavedString(PREF_SEARCH_URL, DEFAULT_SEARCH_URL);                       //get the base url of the search engine
-        String text = searchText.getText().toString().trim();                                       //get search text with rmoved whitespace
+        String baseUrl = getSavedString(PREF_SEARCH_URL, DEFAULT_SEARCH_URL);
+        String text = searchText.getText().toString().trim();
 
-        //workaround for the wrong google url
+        // workaround for the wrong google url
         if (baseUrl.equals("https://www.google.de/#q=%s")){
             baseUrl = "https://www.google.de/search?q=%s";
         } else if (baseUrl.equals("https://www.google.com/#q=%s")){
@@ -162,13 +162,15 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
 
         Uri searchUrl = null;
 
-        if (!baseUrl.contains("%s")) {                                                              //custom search url must contain the %s part
+        // custom search url must contain the %s part
+        if (!baseUrl.contains("%s")) {
             showToast(getString(R.string.string_doesnt_contain_placeholder), this);
             return;
         }
 
         try {
-            searchUrl = Uri.parse(baseUrl.replace("%s",URLEncoder.encode(text, "UTF-8")));          //try to encode the string to a url. eg "this is a test" gets converted to "this+is+a+test"
+            //try to encode the string to a url. eg "this is a test" gets converted to "this+is+a+test"
+            searchUrl = Uri.parse(baseUrl.replace("%s",URLEncoder.encode(text, "UTF-8")));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             showToast(getString(R.string.unsupported_search_character), this);
@@ -178,15 +180,19 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, searchUrl);
 
             try {
-                startActivity(browserIntent);                                                       //try to start the browser, if there is one installed
+                //try to start the browser, if there is one installed
+                startActivity(browserIntent);
             } catch (ActivityNotFoundException e) {
                 e.printStackTrace();
                 showToast(getString(R.string.unsupported_search_string), this);
             }
         }
 
-        searchText.setSelection(0, searchText.length());                                            //select all text to allow for easy delete or modification on resume
-        records.add(text);                                                                          //move search term to front of history
+        //select all text to allow for easy delete or modification on resume
+        searchText.setSelection(0, searchText.length());
+
+        //move search term to front of history
+        records.add(text);
     }
 
     /**
