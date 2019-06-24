@@ -16,7 +16,7 @@
  * If you want to contact me, send me an e-mail at tobias.bielefeld@gmail.com
  */
 
-package de.tobiasbielefeld.searchbar.classes;
+package de.tobiasbielefeld.searchbar.widgets;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

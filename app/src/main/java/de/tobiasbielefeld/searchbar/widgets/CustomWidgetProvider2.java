@@ -16,7 +16,7 @@
  * If you want to contact me, send me an e-mail at tobias.bielefeld@gmail.com
  */
 
-package de.tobiasbielefeld.searchbar.classes;
+package de.tobiasbielefeld.searchbar.widgets;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -34,11 +34,11 @@ import de.tobiasbielefeld.searchbar.ui.MainActivity;
  * Created with the help of: http://stackoverflow.com/a/31629936/7016229
  */
 
-public class CustomWidgetProvider3 extends AppWidgetProvider {
+public class CustomWidgetProvider2 extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout3);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout2);
         Intent configIntent = new Intent(context, MainActivity.class);
 
         PendingIntent configPendingIntent = PendingIntent.getActivity(context, 0, configIntent, 0);

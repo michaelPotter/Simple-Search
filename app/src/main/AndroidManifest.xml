@@ -50,7 +50,7 @@
             android:name=".ui.settings.Settings"
             android:label="@string/activity_settings" />
 
-        <receiver android:name=".classes.CustomWidgetProvider">
+        <receiver android:name=".widgets.CustomWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -60,7 +60,7 @@
                 android:resource="@xml/widget_infos" />
         </receiver>
 
-        <receiver android:name=".classes.CustomWidgetProvider2">
+        <receiver android:name=".widgets.CustomWidgetProvider2">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -70,7 +70,7 @@
                 android:resource="@xml/widget_infos2" />
         </receiver>
 
-        <receiver android:name=".classes.CustomWidgetProvider3">
+        <receiver android:name=".widgets.CustomWidgetProvider3">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
