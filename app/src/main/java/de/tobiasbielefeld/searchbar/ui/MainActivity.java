@@ -113,9 +113,13 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
     /*
      * If the search bar contains text, show the delete-all-text button
      */
+    public void showClearTextButton(CharSequence s) {
+        clearButton.setVisibility(s.toString().equals("") ? View.GONE : View.VISIBLE);
+    }
+
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        clearButton.setVisibility(s.toString().equals("") ? View.GONE : View.VISIBLE);
+        showClearTextButton(s);
     }
 
     @Override
