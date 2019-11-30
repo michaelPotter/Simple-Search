@@ -42,6 +42,7 @@ import java.net.URLEncoder;
 import de.tobiasbielefeld.searchbar.R;
 import de.tobiasbielefeld.searchbar.classes.CustomAppCompatActivity;
 import de.tobiasbielefeld.searchbar.helper.Records;
+import de.tobiasbielefeld.searchbar.helper.WebSearch;
 import de.tobiasbielefeld.searchbar.ui.settings.Settings;
 
 import static de.tobiasbielefeld.searchbar.SharedData.*;
@@ -151,43 +152,9 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
      *
      */
     public void startSearch() {
-        String baseUrl = getSavedString(PREF_SEARCH_URL, DEFAULT_SEARCH_URL);
         String text = searchText.getText().toString().trim();
 
-        // workaround for the wrong google url
-        if (baseUrl.equals("https://www.google.de/#q=%s")){
-            baseUrl = "https://www.google.de/search?q=%s";
-        } else if (baseUrl.equals("https://www.google.com/#q=%s")){
-            baseUrl = "https://www.google.com/search?q=%s";
-        }
-
-        Uri searchUrl = null;
-
-        // custom search url must contain the %s part
-        if (!baseUrl.contains("%s")) {
-            showToast(getString(R.string.string_doesnt_contain_placeholder), this);
-            return;
-        }
-
-        try {
-            //try to encode the string to a url. eg "this is a test" gets converted to "this+is+a+test"
-            searchUrl = Uri.parse(baseUrl.replace("%s",URLEncoder.encode(text, "UTF-8")));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            showToast(getString(R.string.unsupported_search_character), this);
-        }
-
-        if (searchUrl != null) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, searchUrl);
-
-            try {
-                //try to start the browser, if there is one installed
-                startActivity(browserIntent);
-            } catch (ActivityNotFoundException e) {
-                e.printStackTrace();
-                showToast(getString(R.string.unsupported_search_string), this);
-            }
-        }
+		WebSearch.webSearch(text.toString().trim(), this);
 
         //select all text to allow for easy delete or modification on resume
         searchText.setSelection(0, searchText.length());
