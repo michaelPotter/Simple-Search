@@ -68,7 +68,7 @@ public class PreferenceDialogSearchEngine extends ListPreference{
 
         if (index < 3){    //custom search engine
             String prefKey = index > 0 ? PREF_CUSTOM_SEARCH_URL + String.valueOf(index) : PREF_CUSTOM_SEARCH_URL;
-            String savedSearchUrl = getSavedString(PREF_SEARCH_URL,DEFAULT_SEARCH_URL);
+            String savedSearchUrl = getSearchUrl();
             String summary = getSavedString(prefKey, savedSearchUrl);
             summary = summary.replace("%","%%");    //used to escape the %-character in the summary
             setSummary(summary);
@@ -93,7 +93,7 @@ public class PreferenceDialogSearchEngine extends ListPreference{
 
 
         customEditText = v.findViewById(R.id.custom_search_url);
-        String savedSearchUrl = getSavedString(PREF_SEARCH_URL,DEFAULT_SEARCH_URL);
+        String savedSearchUrl = getSearchUrl();
         customEditText.setText(getSavedString(prefKey, savedSearchUrl));
 
         builder.setView(v);

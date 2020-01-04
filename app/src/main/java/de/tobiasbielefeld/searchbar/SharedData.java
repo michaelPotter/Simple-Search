@@ -87,6 +87,20 @@ public class SharedData {
         }
     }
 
+    /*
+     * Returns the url for the user's preferred search engine
+     */
+    public static String getSearchUrl() {
+        return getSavedString(PREF_SEARCH_URL, DEFAULT_SEARCH_URL);
+    }
+
+    /*
+     * Returns the suggestions url for the user's preferred search engine.
+     * Returns the blank string if suggestions are not supported for this engine
+     */
+    public static String getSuggestionUrl() {
+        return "";
+    }
 
     public static int getSavedInt(String name, int defaultValue) {
         return sharedPref.getInt(name, defaultValue);

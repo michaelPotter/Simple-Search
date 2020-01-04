@@ -21,7 +21,7 @@ public class WebSearch {
 
 	public static void webSearch(String text, Context context) {
         Resources res = context.getResources();
-        String baseUrl = getSavedString(PREF_SEARCH_URL, DEFAULT_SEARCH_URL);
+        String baseUrl = getSearchUrl();
 
         // workaround for the wrong google url
         if (baseUrl.equals("https://www.google.de/#q=%s")){
