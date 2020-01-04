@@ -48,6 +48,22 @@
         <item>@string/url_metager</item>
     </string-array>
 
+    <string-array formatted="false" name="search_engine_suggestion_uris" translateable="false">
+        <item/> <!-- if empty, no suggestions will be provided -->
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item>@string/suggestion_url_duckduckgo</item>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+    </string-array>
+
     <string-array name="pref_language_titles" translatable="false">
         <item>@string/settings_language_default</item>
         <item>@string/settings_language_english</item>

@@ -73,6 +73,9 @@
     <string name="url_ecosia" formatted="false">https://www.ecosia.org/search?q=%s</string>
     <string name="url_metager" formatted="false">https://metager.de/en/meta/meta.ger3?focus=web&amp;lang=en&amp;eingabe=%s</string>
 
+    <!-- Suggestion urls -->
+    <string name="suggestion_url_duckduckgo" formatted="false">https://duckduckgo.com/ac/?q=%s</string>
+
     <!-- languages -->
     <string name="settings_language_default">Default language</string>
     <string name="settings_language_english">English</string>
