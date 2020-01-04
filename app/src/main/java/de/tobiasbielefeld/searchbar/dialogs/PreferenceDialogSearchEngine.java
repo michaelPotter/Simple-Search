@@ -41,7 +41,6 @@ import static de.tobiasbielefeld.searchbar.SharedData.*;
 
 public class PreferenceDialogSearchEngine extends ListPreference{
 
-    private EditText customEditText;
 
     private int clickedDialogEntryIndex = -1;
 
@@ -89,7 +88,7 @@ public class PreferenceDialogSearchEngine extends ListPreference{
         View v = inflater.inflate(R.layout.custom_search_engine_dialog, null);
 
 
-        customEditText = v.findViewById(R.id.custom_search_url);
+        final EditText customEditText = v.findViewById(R.id.custom_search_url);
         customEditText.setText(getCustomSearchUrl(which));
 
         builder.setView(v);
