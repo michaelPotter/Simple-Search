@@ -30,7 +30,6 @@ import android.widget.EditText;
 
 
 import de.tobiasbielefeld.searchbar.R;
-import de.tobiasbielefeld.searchbar.classes.ListPreferenceWithSummary;
 
 import static de.tobiasbielefeld.searchbar.SharedData.*;
 
@@ -96,7 +95,7 @@ public class PreferenceDialogSearchEngine extends ListPreference{
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String text = customEditText.getText().toString();
-                        putSavedString(PREF_SEARCH_URL, text);
+                        setSearchUrl(text);
                         setCustomSearchUrl(which, text);
                         clickedDialogEntryIndex = which;
                         getDialog().dismiss();

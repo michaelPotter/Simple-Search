@@ -94,6 +94,10 @@ public class SharedData {
         return getSavedString(PREF_SEARCH_URL, DEFAULT_SEARCH_URL);
     }
 
+    public static void setSearchUrl(String url) {
+        putSavedString(PREF_SEARCH_URL, url);
+    }
+
     /*
      * Returns the suggestions url for the user's preferred search engine.
      * Returns the blank string if suggestions are not supported for this engine
