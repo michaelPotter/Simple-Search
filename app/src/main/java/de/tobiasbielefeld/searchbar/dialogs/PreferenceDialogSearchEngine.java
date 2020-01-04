@@ -67,9 +67,7 @@ public class PreferenceDialogSearchEngine extends ListPreference{
         int index = findIndexOfValue(selectedValue);
 
         if (index < 3){    //custom search engine
-            String prefKey = index > 0 ? PREF_CUSTOM_SEARCH_URL + String.valueOf(index) : PREF_CUSTOM_SEARCH_URL;
-            String savedSearchUrl = getSearchUrl();
-            String summary = getSavedString(prefKey, savedSearchUrl);
+            String summary = getCustomSearchUrl(index);
             summary = summary.replace("%","%%");    //used to escape the %-character in the summary
             setSummary(summary);
         } else {            //a search engine from the list
@@ -84,7 +82,6 @@ public class PreferenceDialogSearchEngine extends ListPreference{
      */
     private void showCustomSearchEngineDialog(final int which){
 
-        final String prefKey = which > 0 ? PREF_CUSTOM_SEARCH_URL + String.valueOf(which) : PREF_CUSTOM_SEARCH_URL;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -93,8 +90,7 @@ public class PreferenceDialogSearchEngine extends ListPreference{
 
 
         customEditText = v.findViewById(R.id.custom_search_url);
-        String savedSearchUrl = getSearchUrl();
-        customEditText.setText(getSavedString(prefKey, savedSearchUrl));
+        customEditText.setText(getCustomSearchUrl(which));
 
         builder.setView(v);
         builder.setTitle(R.string.dialog_custom_search_engine_title)
@@ -102,7 +98,7 @@ public class PreferenceDialogSearchEngine extends ListPreference{
                     public void onClick(DialogInterface dialog, int id) {
                         String text = customEditText.getText().toString();
                         putSavedString(PREF_SEARCH_URL, text);
-                        putSavedString(prefKey, text);
+                        setCustomSearchUrl(which, text);
                         clickedDialogEntryIndex = which;
                         getDialog().dismiss();
                     }})
@@ -113,6 +109,32 @@ public class PreferenceDialogSearchEngine extends ListPreference{
 
         builder.show();
     }
+
+    /*
+     * Returns the url for the nth custom search.
+     * If there is no url stored for the nth search, the current chosen search
+     * url is provided
+     */
+    private String getCustomSearchUrl(int n) {
+        return getSavedString(customSearchPrefkey(n), getSearchUrl());
+    }
+
+    /*
+     * Sets the url for the nth custom search
+     */
+    private void setCustomSearchUrl(int n, String url) {
+        putSavedString(customSearchPrefkey(n), url);
+    }
+
+    /*
+     * Returns the prefkey for the nth custom Search url
+     */
+    private String customSearchPrefkey(int n) {
+        return n > 0 ? PREF_CUSTOM_SEARCH_URL + String.valueOf(n) : PREF_CUSTOM_SEARCH_URL;
+    }
+
+
+
 
 
     /*
