@@ -10,7 +10,7 @@ import de.tobiasbielefeld.searchbar.helper.WebSearch;
 import static de.tobiasbielefeld.searchbar.SharedData.*;
 
 /**
- * This class is to implement searching from the text highlight menu.
+ * This class is to provide searching from the text highlight menu.
  */
 public class TextSearch extends CustomAppCompatActivity {
 
