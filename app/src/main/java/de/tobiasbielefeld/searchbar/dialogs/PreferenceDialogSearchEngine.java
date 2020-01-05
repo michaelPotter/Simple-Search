@@ -70,7 +70,7 @@ public class PreferenceDialogSearchEngine extends ListPreference{
             setSummary(summary);
         } else {            //a search engine from the list
             String[] searchUris = getContext().getResources().getStringArray(R.array.search_engine_uris);
-            putSavedString(PREF_SEARCH_URL,searchUris[index]);
+            setSearchUrl(searchUris[index]);
             setSummary(getEntries()[index]);
         }
     }
@@ -149,11 +149,6 @@ public class PreferenceDialogSearchEngine extends ListPreference{
         entries[1] += " II";
         entries[2] += " III";
 
-//        String savedSearchUrl = getSavedString(PREF_SEARCH_URL,DEFAULT_SEARCH_URL);
-//        entries[0] += "\n" + getSavedString(PREF_CUSTOM_SEARCH_URL, savedSearchUrl);
-//        entries[1] += "\n" + getSavedString(PREF_CUSTOM_SEARCH_URL + "1", savedSearchUrl);
-//        entries[2] += "\n" + getSavedString(PREF_CUSTOM_SEARCH_URL + "2", savedSearchUrl);
-        
         builder.setSingleChoiceItems(entries, clickedDialogEntryIndex,
                 new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int which) {
