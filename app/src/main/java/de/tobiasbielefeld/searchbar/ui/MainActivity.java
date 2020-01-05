@@ -35,6 +35,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -43,7 +46,9 @@ import de.tobiasbielefeld.searchbar.R;
 import de.tobiasbielefeld.searchbar.classes.CustomAppCompatActivity;
 import de.tobiasbielefeld.searchbar.helper.Records;
 import de.tobiasbielefeld.searchbar.helper.WebSearch;
+import de.tobiasbielefeld.searchbar.helper.SuggestionProvider;
 import de.tobiasbielefeld.searchbar.ui.settings.Settings;
+import de.tobiasbielefeld.searchbar.Suggestion;
 
 import static de.tobiasbielefeld.searchbar.SharedData.*;
 
@@ -51,6 +56,7 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
 
     public EditText searchText;
     private ImageView clearButton;
+    private SuggestionProvider suggestionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,8 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         records = new Records(this, (LinearLayout) findViewById(R.id.record_list_container));
 
         setSearchboxTheme();
+        setSuggestionClickListener();
+        suggestionProvider = new SuggestionProvider();
     }
 
     @Override
@@ -121,6 +129,7 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         showClearTextButton(s);
+        updateSuggestions(s.toString());
     }
 
     @Override
@@ -154,7 +163,7 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
     public void startSearch() {
         String text = searchText.getText().toString().trim();
 
-		WebSearch.webSearch(text.toString().trim(), this);
+        WebSearch.webSearch(text.toString().trim(), this);
 
         //select all text to allow for easy delete or modification on resume
         searchText.setSelection(0, searchText.length());
@@ -183,6 +192,46 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         searchText.setSelection(searchText.length());
     }
 
+    public void updateSuggestions(final String text) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Suggestion[] suggestions = suggestionProvider.getSuggestions(text);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setSuggestions(suggestions);
+                }
+            });
+            }
+        });
+        t.start();
+    }
+
+    /*
+     * Sets the suggestion list to the given suggestions
+     * This simply updates the ListView
+     */
+    public void setSuggestions(Suggestion[] suggestions) {
+        ListView listView = findViewById(R.id.suggestions);
+        listView.setAdapter( new ArrayAdapter<Suggestion>(this, android.R.layout.simple_list_item_1, suggestions));
+    }
+
+    /*
+     * Convenience method to set the listener for the suggestions listview
+     */
+    public void setSuggestionClickListener() {
+        ListView listView = findViewById(R.id.suggestions);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String text = ((TextView) view).getText().toString();
+                setSearchText(text);
+                startSearch();
+
+            }
+        });
+    }
 
     /**
      *  Focuses the search bar and shows the keyboard
