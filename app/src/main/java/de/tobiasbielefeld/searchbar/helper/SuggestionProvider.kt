@@ -1,4 +1,4 @@
-package de.tobiasbielefeld.searchbar;
+package de.tobiasbielefeld.searchbar.helper;
 
 import java.net.HttpURLConnection
 import java.io.InputStream
