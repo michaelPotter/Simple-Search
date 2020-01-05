@@ -103,7 +103,7 @@ public class SharedData {
      * Returns the blank string if suggestions are not supported for this engine
      */
     public static String getSuggestionUrl() {
-        return "";
+        return "https://duckduckgo.com/ac/?q=%s";
     }
 
     public static int getSavedInt(String name, int defaultValue) {
