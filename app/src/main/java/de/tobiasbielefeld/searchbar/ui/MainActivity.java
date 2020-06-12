@@ -192,6 +192,10 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         searchText.setSelection(searchText.length());
     }
 
+    /**
+     * This method pulls takes the currently typed text, pulls down
+     * suggestions, and updates the UI with those suggestions.
+     */
     public void updateSuggestions(final String text) {
         Thread t = new Thread(new Runnable() {
             @Override
@@ -209,7 +213,7 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         t.start();
     }
 
-    /*
+    /**
      * Sets the suggestion list to the given suggestions
      * This simply updates the ListView
      */
@@ -218,7 +222,7 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         listView.setAdapter( new ArrayAdapter<Suggestion>(this, android.R.layout.simple_list_item_1, suggestions));
     }
 
-    /*
+    /**
      * Convenience method to set the listener for the suggestions listview
      */
     public void setSuggestionClickListener() {
@@ -246,7 +250,7 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         }
     }
 
-    /*
+    /**
      * Gets the text from the search bar and starts the search
      */
     @Override
