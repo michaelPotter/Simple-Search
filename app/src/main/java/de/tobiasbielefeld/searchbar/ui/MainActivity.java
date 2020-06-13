@@ -48,6 +48,7 @@ import de.tobiasbielefeld.searchbar.helper.Records;
 import de.tobiasbielefeld.searchbar.helper.WebSearch;
 import de.tobiasbielefeld.searchbar.helper.SuggestionProvider;
 import de.tobiasbielefeld.searchbar.ui.settings.Settings;
+import de.tobiasbielefeld.searchbar.ui.ListItem;
 import de.tobiasbielefeld.searchbar.Suggestion;
 
 import static de.tobiasbielefeld.searchbar.SharedData.*;
@@ -79,7 +80,6 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         records = new Records(this, (LinearLayout) findViewById(R.id.record_list_container));
 
         setSearchboxTheme();
-        setSuggestionClickListener();
         suggestionProvider = new SuggestionProvider();
     }
 
@@ -90,6 +90,9 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         return true;
     }
 
+    /**
+     * Handle menu item clicks
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -219,22 +222,17 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
      */
     public void setSuggestions(Suggestion[] suggestions) {
         ListView listView = findViewById(R.id.suggestions);
-        listView.setAdapter( new ArrayAdapter<Suggestion>(this, android.R.layout.simple_list_item_1, suggestions));
-    }
+        ListItem.ListItemAdapter adapter = new ListItem.ListItemAdapter<Suggestion>(this, suggestions);
 
-    /**
-     * Convenience method to set the listener for the suggestions listview
-     */
-    public void setSuggestionClickListener() {
-        ListView listView = findViewById(R.id.suggestions);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String text = ((TextView) view).getText().toString();
-                setSearchText(text);
-                startSearch();
-
-            }
+        // each item in the listview will get these listeners
+        adapter.setItemClickListener(s -> {
+            setSearchText(s);
+            startSearch();
         });
+        adapter.setButtonClickListener(this::setSearchText);
+        adapter.setButtonLongClickListener(this::appendSearchText);
+
+        listView.setAdapter(adapter);
     }
 
     /**

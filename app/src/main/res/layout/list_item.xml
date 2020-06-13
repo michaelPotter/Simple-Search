@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO delete/deprecate this file in favor of list_item.xml -->
-<LinearLayout
+
+<!-- This layout is used for both the record list entry, as well as suggestion list entries. -->
+
+<de.tobiasbielefeld.searchbar.ui.ListItem
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/entry"
@@ -9,6 +11,7 @@
     android:orientation="horizontal">
 
     <TextView
+        android:id="@+id/text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -20,6 +23,7 @@
         android:textSize="@dimen/record_list_text_size" />
 
     <ImageView
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
@@ -28,4 +32,4 @@
         android:padding="@dimen/record_list_entry_padding"
         app:srcCompat="@drawable/icon_plus" />
 
-</LinearLayout>
+</de.tobiasbielefeld.searchbar.ui.ListItem>
