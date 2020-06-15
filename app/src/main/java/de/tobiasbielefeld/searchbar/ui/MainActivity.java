@@ -200,18 +200,12 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
      * suggestions, and updates the UI with those suggestions.
      */
     public void updateSuggestions(final String text) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Suggestion[] suggestions = suggestionProvider.getSuggestions(text);
+        Thread t = new Thread(() -> {
+            final Suggestion[] suggestions = suggestionProvider.getSuggestions(text);
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setSuggestions(suggestions);
-                }
+            runOnUiThread(() -> {
+                setSuggestions(suggestions);
             });
-            }
         });
         t.start();
     }
