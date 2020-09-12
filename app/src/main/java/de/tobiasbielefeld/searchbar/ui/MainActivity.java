@@ -38,9 +38,13 @@ import android.widget.TextView;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
+import android.widget.Toast;
+import androidx.room.Room;
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import de.tobiasbielefeld.searchbar.R;
 import de.tobiasbielefeld.searchbar.classes.CustomAppCompatActivity;
@@ -50,6 +54,8 @@ import de.tobiasbielefeld.searchbar.helper.SuggestionProvider;
 import de.tobiasbielefeld.searchbar.ui.settings.Settings;
 import de.tobiasbielefeld.searchbar.ui.ListItem;
 import de.tobiasbielefeld.searchbar.Suggestion;
+import de.tobiasbielefeld.searchbar.storage.RecordDatabase;
+import de.tobiasbielefeld.searchbar.storage.Record;
 
 import static de.tobiasbielefeld.searchbar.SharedData.*;
 
@@ -58,6 +64,7 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
     public EditText searchText;
     private ImageView clearButton;
     private SuggestionProvider suggestionProvider;
+    private RecordDatabase recordDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +84,7 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         searchText.addTextChangedListener(this);
         searchText.setOnEditorActionListener(this);
 
-        records = new Records(this, (LinearLayout) findViewById(R.id.record_list_container));
+        recordDB = Room.databaseBuilder(getApplicationContext(), RecordDatabase.class, "record").build();
 
         setSearchboxTheme();
         suggestionProvider = new SuggestionProvider();
@@ -102,7 +109,14 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
                 //startActivityForResult(intent, 1);
                 break;
             case R.id.item_delete_all: //shows the delete dialog
-                records.showDeleteAllDialog();
+                // TODO show confirm dialog
+                Toast.makeText(this, "TODO: show confirm delete dialog", Toast.LENGTH_SHORT).show();
+                (new Thread(() -> {
+                    recordDB.recordDao().deleteAll();
+                    runOnUiThread(() -> {
+                        populateHistory();
+                    });
+                })).start();
                 break;
         }
 
@@ -137,12 +151,12 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        //nothing
+        // nothing but we have to implement as part of OnEditorActionListener
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        //nothing
+        // nothing but we have to implement as part of OnEditorActionListener
     }
 
     @Override
@@ -155,7 +169,7 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
     @Override
     public void onResume() {
         super.onResume();
-        records.load();
+        populateHistory();
         focusSearchBar();
     }
 
@@ -171,8 +185,12 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
         //select all text to allow for easy delete or modification on resume
         searchText.setSelection(0, searchText.length());
 
-        //move search term to front of history
-        records.add(text);
+        // TODO check save history setting before saving
+        // save to history
+        Thread t = new Thread(() -> {
+            recordDB.recordDao().add(new Record(text));
+        });
+        t.start();
     }
 
     /**
@@ -202,7 +220,6 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
     public void updateSuggestions(final String text) {
         Thread t = new Thread(() -> {
             final Suggestion[] suggestions = suggestionProvider.getSuggestions(text);
-
             runOnUiThread(() -> {
                 setSuggestions(suggestions);
             });
@@ -267,5 +284,44 @@ public class MainActivity extends CustomAppCompatActivity implements TextWatcher
                 textSearch.setBackgroundResource(R.drawable.widget_background_black);
                 break;
         }
+    }
+
+    private void populateHistory() {
+        Thread t = new Thread(() -> {
+            // Pull history out of db. This can't be on ui thread
+            List<Record> history = recordDB.recordDao().getAll();
+            runOnUiThread(() -> {
+                // find the history view
+                ListView listView = findViewById(R.id.history);
+                ListItem.ListItemAdapter adapter = new ListItem.ListItemAdapter<Record>(this, history);
+
+                // each item in the listview will get these listeners
+                adapter.setItemClickListener(s -> {
+                    setSearchText(s);
+                    startSearch();
+                });
+
+                // on long click an item, show an option to delete it
+                adapter.setItemLongClickListener(s -> {
+                    (new Thread(() -> {
+                        // TODO show confirm dialog
+                        // delete the record
+                        // FIXME: This isn't really working right now. Maybe it needs the id of the record to delete as well?
+                        recordDB.recordDao().delete(new Record(s));
+                        // reload the history
+                        runOnUiThread(() -> {
+                            Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show();
+                            populateHistory();
+                        });
+                    })).start();
+                });
+
+                adapter.setButtonClickListener(this::setSearchText);
+                adapter.setButtonLongClickListener(this::appendSearchText);
+
+                listView.setAdapter(adapter);
+            });
+        });
+        t.start();
     }
 }

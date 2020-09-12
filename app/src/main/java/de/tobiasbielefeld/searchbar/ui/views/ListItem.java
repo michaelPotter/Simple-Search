@@ -111,6 +111,10 @@ public class ListItem extends LinearLayout {
 			super(context, R.layout.list_item, R.id.text, objects);
 		}
 
+		public ListItemAdapter(Context context, List<T> objects) {
+			super(context, R.layout.list_item, R.id.text, objects);
+		}
+
 		/**
 		 * The given click listener will be applied to each item in the list
 		 */

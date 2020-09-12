@@ -18,6 +18,7 @@
 
 package de.tobiasbielefeld.searchbar.helper;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ListView;
 
 import java.util.LinkedList;
 import java.util.Collections;
@@ -34,6 +36,7 @@ import de.tobiasbielefeld.searchbar.SharedData;
 import de.tobiasbielefeld.searchbar.dialogs.DialogDeleteAll;
 import de.tobiasbielefeld.searchbar.dialogs.DialogDeleteEntry;
 import de.tobiasbielefeld.searchbar.ui.MainActivity;
+import de.tobiasbielefeld.searchbar.ui.ListItem;
 
 import static de.tobiasbielefeld.searchbar.SharedData.*;
 
@@ -48,12 +51,16 @@ public class Records implements View.OnClickListener, View.OnLongClickListener{
     private LinkedList<String> recordList;
     private int MAX_NUMBER_OF_RECORDS;
 
-    public Records(MainActivity mainActivity, LinearLayout linearLayout){
-        container = linearLayout;
+    public Records(MainActivity mainActivity) {
         main = mainActivity;
         Resources res = main.getResources();
         MAX_NUMBER_OF_RECORDS = res.getInteger(R.integer.max_number_records);
         recordList = new LinkedList<>();
+    }
+
+    public Records(MainActivity mainActivity, LinearLayout linearLayout) {
+        this(mainActivity);
+        container = linearLayout;
     }
 
     /**
@@ -63,30 +70,33 @@ public class Records implements View.OnClickListener, View.OnLongClickListener{
     public void load() {
 
         recordList.clear();
-        container.removeAllViews();
+        // container.removeAllViews();
 
         if (!recordsEnabled())
             return;
 
         int recordListLength = getSavedInt(PREF_RECORD_LIST_SIZE, 0);
 
-        // populate linearLayouts with layouts from XML resource
         for (int i = 0; i < recordListLength; i++) {
-            LinearLayout layout= (LinearLayout) LayoutInflater.from(main).inflate(R.layout.record_list_entry, null);
-            TextView textView = (TextView) layout.getChildAt(0);
-
-            textView.setOnClickListener(this);
-            textView.setOnLongClickListener(this);
-            layout.getChildAt(1).setOnClickListener(this);
-
             String text = getSavedString(PREF_RECORD_ENTRY + i, "");
-
-            // Crosslink elements
             recordList.add(text);
-            ((TextView) layout.getChildAt(0)).setText(text);
-
-            container.addView(layout);
         }
+
+        ListView listView = main.findViewById(R.id.suggestions);
+        ListItem.ListItemAdapter adapter = new ListItem.ListItemAdapter<String>(main, recordList);
+
+        // populate linearLayouts with layouts from XML resource
+        // for (int i = 0; i < recordListLength; i++) {
+        //     LinearLayout layout= (LinearLayout) LayoutInflater.from(main).inflate(R.layout.record_list_entry, null);
+        //     TextView textView = (TextView) layout.getChildAt(0);
+
+        //     textView.setOnClickListener(this);
+        //     textView.setOnLongClickListener(this);
+        //     layout.getChildAt(1).setOnClickListener(this);
+        //     ((TextView) layout.getChildAt(0)).setText(recordList.get(i));
+
+        //     container.addView(layout);
+        // }
     }
 
     /**
